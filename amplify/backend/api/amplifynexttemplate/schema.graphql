@@ -1,0 +1,23 @@
+type Subject @model @auth(rules: [{ allow: public, operations: [create, read, update, delete] }]) {
+  id: ID! @primaryKey
+  name: String!
+  topics: [Topic] @hasMany(indexName: "bySubject", fields: ["id"])
+}
+
+type Topic @model @auth(rules: [{ allow: public, operations: [create, read, update, delete] }]) {
+  id: ID! @primaryKey
+  subjectID: ID! @index(name: "bySubject")
+  name: String!
+}
+
+input CreateSubjectInput {
+  id: ID
+  name: String!
+  topics: [CreateTopicInput]
+}
+
+input CreateTopicInput {
+  id: ID
+  subjectID: ID!
+  name: String!
+}

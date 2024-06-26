@@ -1,0 +1,54 @@
+.form-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-container form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container label {
+  margin-bottom: 10px;
+  display: block; /* Asegura que los labels ocupen una línea completa */
+}
+
+.form-container fieldset {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.form-container legend {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.form-container input[type="file"],
+.form-container input[type="url"] {
+  width: 100%; /* Hace que los inputs ocupen todo el ancho disponible */
+  padding: 8px;
+  font-size: 1em;
+}
+
+.submit-button {
+  /* Estilos para cuando el botón está activo */
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+
+.submit-button.disabled {
+  /* Estilos para cuando el botón está desactivado */
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+}
