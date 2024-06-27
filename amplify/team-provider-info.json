@@ -17,6 +17,9 @@
       },
       "api": {
         "amplifynexttemplate": {}
+      },
+      "storage": {
+        "s3502c6119": {}
       }
     }
   }

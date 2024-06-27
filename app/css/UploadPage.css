@@ -1,53 +1,128 @@
-.form-container {
-  max-width: 600px;
-  margin: auto;
+.upload-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 100vh;
+  background-color: #080808;
   padding: 20px;
-  background-color: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.form-container form {
+.top-bar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color:  rgba(250, 250, 250, 0.2); /* Color de fondo transparente */
+  position: relative; /* Asegura que los íconos se posicionen relativos a este contenedor */
+}
+
+.menu-icon {
+  cursor: pointer;
+  color: white;
+  position: relative;
+}
+
+.home-icon {
+  cursor: pointer;
+  color: white;
+  position: relative;
+  top: 10px; /* Ajustar esta propiedad para mover la casa hacia abajo */
+}
+
+.menu-dropdown {
+  position: absolute;
+  top: 90px; /* Ajusta este valor según sea necesario */
+  left: 10px; /* Asegúrate de que el menú aparezca justo debajo del icono de las tres barras */
+  background-color: #cc1c1c; /* Cambia el color de fondo del menú */
+  border: 1px solid #222; /* Cambia el color del borde del menú */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 200px; /* Ajusta el ancho del menú según sea necesario */
+}
+
+.menu-dropdown ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: rgb(28, 28, 28); /* Cambia el color del texto del menú */
+}
+
+.menu-dropdown li {
+  padding: 10px;
+  border-bottom: 1px solid #333; /* Opcional: agrega una línea divisoria entre elementos */
+}
+
+.menu-dropdown li button {
+  background: none;
+  border: none;
+  color: rgb(11, 11, 11); /* Cambia el color del texto del botón */
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+}
+
+.menu-dropdown li button:hover {
+  background-color: #d9d9d9; /* Cambia el color de fondo cuando el botón está en hover */
+}
+
+.upload-form-container {
+  width: 100%;
+  max-width: 600px;
+  margin-top: 10px; /* Agrega espacio superior para mayor separación */
+  padding: 20px;
+  top: 150px;
+  background-color:  rgba(250, 250, 250, 0.2); /* Color de fondo transparente */
+  /* Color de fondo del formulario */
+  border: 1px solid #0c0c0c; /* Borde del formulario */
+  border-radius: 5px; /* Bordes redondeados */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra */
+  color: white; /* Cambia el color del texto del formulario a blanco */
+}
+
+.upload-form-container form {
   display: flex;
   flex-direction: column;
 }
 
-.form-container label {
+.upload-form-container label {
   margin-bottom: 10px;
-  display: block; /* Asegura que los labels ocupen una línea completa */
 }
 
-.form-container fieldset {
+.upload-form-container fieldset {
   margin-bottom: 20px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #fafafa;
   border-radius: 5px;
 }
 
-.form-container legend {
+.upload-form-container legend {
   font-size: 1.2em;
   font-weight: bold;
 }
 
-.form-container input[type="file"],
-.form-container input[type="url"] {
-  width: 100%; /* Hace que los inputs ocupen todo el ancho disponible */
+.upload-form-container input[type="file"],
+.upload-form-container input[type="url"] {
+  margin-top: 10px; /* Agrega espacio entre los campos de entrada */
+  color: rgb(249, 249, 249); /* Cambia el color del texto de los campos de entrada */
+  width: 100%;
   padding: 8px;
   font-size: 1em;
 }
 
 .submit-button {
-  /* Estilos para cuando el botón está activo */
-  background-color: #007bff;
-  color: #fff;
   padding: 10px 20px;
+  font-size: 1em;
+  background-color: #090909;
+  color: white;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
+  margin-top: 20px; /* Agrega espacio en la parte superior del botón */
 }
 
 .submit-button.disabled {
-  /* Estilos para cuando el botón está desactivado */
   background-color: #ccc;
   color: #666;
   cursor: not-allowed;

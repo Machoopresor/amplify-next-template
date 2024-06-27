@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Amplify } from 'aws-amplify';
 import awsconfig from '../exports';
-import { Authenticator, AuthenticatorProps, ThemeProvider, defaultTheme } from '@aws-amplify/ui-react';
+import { Authenticator, ThemeProvider, defaultTheme } from '@aws-amplify/ui-react';
 import '@aws-amplify/ui-react/styles.css';
 import HomePage from './HomePage';
 import SearchPage from './SearchPage';
@@ -16,7 +16,7 @@ import './HomePage.css';
 
 Amplify.configure(awsconfig);
 
-const formFields: AuthenticatorProps['formFields'] = {
+const formFields = {
   signUp: {
     email: {
       placeholder: 'Enter your email',
@@ -48,9 +48,18 @@ const theme = {
   },
 };
 
-const Page = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+interface PrivateRouteProps {
+  isAuthenticated: boolean;
+  children: React.ReactNode;
+}
+
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ isAuthenticated, children }) => {
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+};
+
+const Page: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -63,32 +72,26 @@ const Page = () => {
   return (
     <ThemeProvider theme={{ ...defaultTheme, ...theme }}>
       <Router>
-        <Routes>
-          <Route path="/" element={
-            <Authenticator formFields={formFields}>
-              {({ signOut, user }) => {
-                if (user) {
-                  setIsAuthenticated(true);
-                } else {
-                  setIsAuthenticated(false);
-                }
-                return !isAuthenticated ? (
-                  <div className="auth-container">
-                    <div className="auth-form">
-                      {/* Aquí puedes agregar más contenido si es necesario */}
-                    </div>
-                  </div>
-                ) : (
-                  <HomePage signOut={signOut} />
-                );
-              }}
-            </Authenticator>
-          } />
-          <Route path="/search" element={<SearchPage />} />
-          <Route path="/add" element={<AddPage />} />
-          <Route path="/upload" element={<UploadPage />} />
-          <Route path="/favorites" element={<FavoritesPage />} />
-        </Routes>
+        <Authenticator formFields={formFields}>
+          {({ signOut, user }) => {
+            if (user && !isAuthenticated) {
+              setIsAuthenticated(true);
+              return <Navigate to="/" />;
+            }
+            if (!user && isAuthenticated) {
+              setIsAuthenticated(false);
+            }
+            return (
+              <Routes>
+                <Route path="/" element={<HomePage signOut={signOut} />} />
+                <Route path="/search" element={<PrivateRoute isAuthenticated={!!user}><SearchPage /></PrivateRoute>} />
+                <Route path="/add" element={<PrivateRoute isAuthenticated={!!user}><AddPage /></PrivateRoute>} />
+                <Route path="/upload" element={<PrivateRoute isAuthenticated={!!user}><UploadPage signOut={signOut} /></PrivateRoute>} />
+                <Route path="/favorites" element={<PrivateRoute isAuthenticated={!!user}><FavoritesPage /></PrivateRoute>} />
+              </Routes>
+            );
+          }}
+        </Authenticator>
       </Router>
     </ThemeProvider>
   );

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import './css/UploadPage.css';
 import { FaBars, FaHome } from 'react-icons/fa';
+import './css/UploadPage.css';
 import { useQuery, gql } from '@apollo/client';
-import client from '../src/apollo-client'; // Asegúrate de importar el cliente creado anteriormente
+import client from '../src/apollo-client';
+import { useNavigate } from 'react-router-dom';
 
 const LIST_SUBJECTS = gql`
   query ListSubjects {
@@ -27,26 +28,29 @@ interface Subject {
   topics: { items: { id: string; name: string; }[] };
 }
 
-const UploadPage: React.FC = () => {
+interface UploadPageProps {
+  signOut?: (data?: any) => void;
+}
+
+const UploadPage: React.FC<UploadPageProps> = ({ signOut }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedTopic, setSelectedTopic] = useState('');
   const [fileType, setFileType] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [linkUrl, setLinkUrl] = useState('');
-  const [subjects, setSubjects] = useState<Subject[]>([]); // Definición explícita del tipo de subjects
-  const [isFormValid, setIsFormValid] = useState(false); // Estado para activar/desactivar el botón de subir archivo
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Estado para controlar la apertura del menú
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [isFormValid, setIsFormValid] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { loading, error, data } = useQuery(LIST_SUBJECTS, { client });
 
-  // Actualiza el estado de materias y temas cuando se obtengan los datos
   useEffect(() => {
     if (data) {
       setSubjects(data.listSubjects.items);
     }
   }, [data]);
 
-  // Función para verificar si todos los campos obligatorios están completos
   useEffect(() => {
     if (selectedSubject && selectedTopic && fileType && ((fileType !== 'Enlace' && file) || (fileType === 'Enlace' && linkUrl))) {
       setIsFormValid(true);
@@ -63,13 +67,12 @@ const UploadPage: React.FC = () => {
 
   const handleSubjectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSubject(event.target.value);
-    setSelectedTopic(''); // Reiniciar el tema seleccionado cuando cambia la materia
+    setSelectedTopic('');
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log({ selectedSubject, selectedTopic, fileType, file, linkUrl });
-    // Aquí podrías implementar la lógica para subir el archivo según el tipo seleccionado
   };
 
   const toggleMenu = () => {
@@ -77,21 +80,17 @@ const UploadPage: React.FC = () => {
   };
 
   const navigateToHome = () => {
-    // Implementa la navegación a la página de inicio
-    console.log('Navigating to home');
+    navigate('/');
   };
 
-  if (loading) return <p>Cargando...</p>;
-  if (error) return <p>Error al cargar las materias y temas.</p>;
-
   return (
-    <div className="upload-container">
+    <div className="upload-page-container">
       <div className="top-bar">
-        <div className="home-icon" onClick={navigateToHome}>
-          <FaHome size={24} />
-        </div>
         <div className="menu-icon" onClick={toggleMenu}>
-          <FaBars size={24} />
+          <FaBars size={30} />
+        </div>
+        <div className="home-icon" onClick={navigateToHome}>
+          <FaHome size={30} />
         </div>
       </div>
 
@@ -100,12 +99,12 @@ const UploadPage: React.FC = () => {
           <ul>
             <li><button onClick={() => alert('Opción 1')}>Opción 1</button></li>
             <li><button onClick={() => alert('Opción 2')}>Opción 2</button></li>
-            <li><button onClick={() => alert('Cerrar sesión')}>Cerrar sesión</button></li>
+            <li><button onClick={signOut}>Cerrar sesión</button></li>
           </ul>
         </div>
       )}
 
-      <div className="form-container">
+      <div className="upload-form-container">
         <form onSubmit={handleSubmit}>
           <label>
             Elige la materia:
@@ -126,7 +125,7 @@ const UploadPage: React.FC = () => {
               value={selectedTopic} 
               onChange={(e) => setSelectedTopic(e.target.value)} 
               required
-              disabled={!selectedSubject} // Deshabilitar si no se ha seleccionado una materia
+              disabled={!selectedSubject}
             >
               <option value="" disabled>Seleccionar tema</option>
               {subjects
